@@ -1,30 +1,25 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-
-import { userLoginReducer, userRegisterReducer } from './reducers/userReducers';
-
+import { userLoginReducer, userRegisterReducer, verifyOTPReducer } from './reducers/userReducers';
 
 const reducer = combineReducers({
-    // Add your reducers here
     userLogin: userLoginReducer,
-    userRegister: userRegisterReducer
+    userRegister: userRegisterReducer,
+    verifyOTP: verifyOTPReducer,
 });
-
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ? 
     JSON.parse(localStorage.getItem('userInfo')) : null;
 
 const initialState = {
-    // Add your initial states here
     userLogin: { userInfo: userInfoFromStorage },
+    verifyOTP: {},
 };
-
 
 const store = configureStore({
     reducer,
     preloadedState: initialState,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
-
 
 export default store;

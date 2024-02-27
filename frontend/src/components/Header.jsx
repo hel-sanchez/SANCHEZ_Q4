@@ -237,7 +237,7 @@ function Header() {
                     
                     <MenuItem onClick={handleCloseUserMenu}>
                       <Typography
-                        sx={{ color: "inherit", textDecoration: "none" }}
+                        sx={{ color: "inherit", AtextDecoration: "none" }}
                         // component={Link}
                         onClick={logoutHandler}
                         // to={`/${setting.toLowerCase()}`}
