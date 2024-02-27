@@ -1,34 +1,31 @@
-// ForgotPassScreen.jsx
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { userChangePasswordEmail } from "../actions/userActions";
 import {
   Avatar,
   Button,
   TextField,
+  FormControlLabel,
+  Checkbox,
   Grid,
   Box,
   Typography,
+  Link,
 } from "@mui/material";
-
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link } from "react-router-dom";
-
 import FormContainer from "../components/FormContainer";
 
-function ForgotPassScreen() {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+const SendPasswordChangeRequestScreen = () => {
+  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+  const userSendChangePassword = useSelector(
+    (state) => state.userSendChangePassword
+  );
+  const { loading, error } = userSendChangePassword;
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
-
-    // Here you would typically make an API call to send a password reset email
-    // For this example, let's just display a message
-    setMessage(`Password reset email sent to ${email}`);
+    dispatch(userChangePasswordEmail(email));
   };
 
   return (
@@ -37,54 +34,58 @@ function ForgotPassScreen() {
         <Avatar sx={{ m: 1, bgcolor: "inherit" }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Forgot Password
+        <Typography component="h1" variant="h5" sx={{ color: "white" }}>
+          Send Password Change Request
         </Typography>
+        {error && <div style={{ color: "red" }}>{error}</div>}
         <Box
           component="form"
-          onSubmit={handleSubmit}
-          sx={{ mt: 1 }}
+          onSubmit={submitHandler}
+          sx={{ mt: 1, width: "100%", maxWidth: 400 }}
         >
           <TextField
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email"
+            label="Email Address"
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={handleEmailChange}
             value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            variant="outlined"
             sx={{
               "& .MuiOutlinedInput-root": {
                 borderColor: "white !important",
                 backgroundColor: "#424242 !important",
               },
               "& label.Mui-focused": {
-                color: "white !important",
+                color: "white !important", // Change label color when focused
               },
               "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white !important",
+                borderColor: "white !important", // Change border color when focused
               },
               "& input": {
-                color: "white !important",
-                borderColor: "white !important",
+                color: "white !important", // Change input text color
               },
               "& .MuiInputLabel-root": {
-                color: "white !important",
-                borderColor: "white !important",
+                color: "white !important", // Change label color
               },
               "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
                 {
-                  borderColor: "white !important",
+                  borderColor: "white !important", // Change border color on hover
                 },
               "& .MuiOutlinedInput-root:active": {
                 color: "white !important",
                 borderColor: "white !important",
               },
+              "& .input": {
+                color: "white !important",
+              },
             }}
           />
+
           <Button
             type="submit"
             fullWidth
@@ -96,17 +97,12 @@ function ForgotPassScreen() {
               borderColor: "white !important",
             }}
           >
-            Reset Password
+            {loading ? "Sending..." : "Send Request"}
           </Button>
         </Box>
-        <p>{message}</p>
-        <Grid container justifyContent="flex-end">
+        <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
           <Grid item>
-            <Typography
-              component={Link}
-              to="/login"
-              sx={{ color: "white" }}
-            >
+            <Typography component={Link} to="/login" sx={{ color: "white" }}>
               Back to Sign In
             </Typography>
           </Grid>
@@ -114,6 +110,6 @@ function ForgotPassScreen() {
       </>
     </FormContainer>
   );
-}
+};
 
-export default ForgotPassScreen;
+export default SendPasswordChangeRequestScreen;

@@ -9,9 +9,10 @@ import RegisterScreen from "./screens/RegisterScreen";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProfileScreen from "./screens/ProfileScreen";
-import ForgotPassScreen from "./screens/ForgotPassScreen";
-import ChangePassScreen from "./screens/ChangePass";
 import VerifyOTPScreen from "./screens/VerifyOTPScreen";
+import SendPasswordScreen from "./screens/SendPasswordScreen";
+import ConfirmPasswordChangeScreen from "./screens/ConfirmChangePassScreen";
+import UpdatePasswordScreen from "./screens/UpdatePasswordScreen";
 
 function App() {
   return (
@@ -25,9 +26,10 @@ function App() {
               <Route path='login/' element={<LoginScreen />} />
               <Route path='register/' element={<RegisterScreen />} />
               <Route path='profile/' element={<ProfileScreen />} />
-              <Route path='/auth/reset-password' element={<ForgotPassScreen />} />
-              <Route path='change-password/' element={<ChangePassScreen />} />
               <Route path="/verify-otp" element={<VerifyOTPScreen />} />
+              <Route path="/send-password-reset" element={<SendPasswordScreen />} />
+              <Route path="/reset-password/:uid/:token" element={<ConfirmPasswordChangeScreen />} />
+              <Route path="/change-password" element = {<UpdatePasswordScreen />} />
             </Routes>
           </Container>
         </main>

@@ -13,6 +13,13 @@ from django.conf import settings
 from .models import OTP
 from django.contrib.auth import authenticate, login
 
+from . import utils
+from rest_framework.generics import UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
+from .serializers import *
+from rest_framework.views import APIView
+from .renderers import UserRenderer
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -80,3 +87,41 @@ def verifyOTP(request):
     print("OTP verified successfully and user activated")
 
     return Response({'detail': 'OTP verified successfully and user activated'})
+
+
+class ChangePasswordView(APIView):
+    renderer_classes = (UserRenderer,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, format=None):
+        print ("Change password request received!")
+        print ("Request data:", request.data)
+        serializer = UserChangePasswordSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, format=None):
+        # Handle PUT request for changing password
+        return self.post(request, format)
+
+class SendPasswordResetEmailView(APIView):
+    renderer_classes = (UserRenderer,)
+    def post(self, request, format=None):
+        serializer = SendPasswordResetEmailSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            return Response({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
+
+class UserPasswordResetView(APIView):
+    renderer_classes = (UserRenderer,)
+    def post(self, request, uid, token, format=None):
+        serializer = UserPasswordResetSerializer(data=request.data, context={'uid': uid, 'token': token})
+        if serializer.is_valid(raise_exception=True):
+            # Add debugging statement here
+            print("Change password request received!")
+            print("Request data:", request.data)
+            print("UID:", uid)
+            serializer.save()  # Save the new password
+            return Response({'message': 'Password reset successfully'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

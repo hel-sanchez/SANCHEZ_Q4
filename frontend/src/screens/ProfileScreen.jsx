@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Avatar,
   Button,
@@ -14,12 +14,24 @@ import { Link, useNavigate } from "react-router-dom";
 const ProfileScreen = () => {
   const navigate = useNavigate();
   const userLogin = useSelector((state) => state.userLogin.userInfo);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (userLogin === null) {
       navigate("/");
     }
   }, [userLogin]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log("Upload logic here:", file);
+  };
+
+  const handleProfileClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: 8, color: "inherit" }}>
@@ -37,7 +49,15 @@ const ProfileScreen = () => {
             <Avatar
               alt={userLogin ? userLogin.username : ""}
               src="/static/images/avatar/2.jpg"
-              sx={{ width: 80, height: 80 }}
+              sx={{ width: 80, height: 80, cursor: "pointer" }}
+              onClick={handleProfileClick}
+            />
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept="image/*"
             />
           </Grid>
           <Grid item xs={12} container justifyContent="center">
